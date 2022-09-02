@@ -6,6 +6,7 @@ A C++ Sample Project in which a cat and a mouse both traverse a maze in order to
 * If the mouse is within the cat's line of sight, it will move towards it, otherwise it will move in a random available direction other than where it just came from
 
 ## How to Run
+#### These instructions assume you are compiling in Windows with Visual Studio installed. Otherwise, you can compile with your preferred compiler.
 1. Navigate to the folder containing the project in a developer command line
 2. Run `cl /EHsc maze-simulation.cpp` to compile the project
 3. Run `maze-simulation.exe` to view the outcome of the simulation
