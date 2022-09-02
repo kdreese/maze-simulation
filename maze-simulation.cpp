@@ -80,7 +80,7 @@ void move_left(int obj){
 
 void move_right(int obj){
     if(obj == MOUSE_ID){
-        if(mouse_coords.second < (sizeof(maze[1]) - 1) / sizeof(int) && maze[mouse_coords.first][mouse_coords.second + 1] == 0 || maze[mouse_coords.first][mouse_coords.second + 1] == CHEESE_ID){
+        if(mouse_coords.second < NUM_COLS && maze[mouse_coords.first][mouse_coords.second + 1] == 0 || maze[mouse_coords.first][mouse_coords.second + 1] == CHEESE_ID){
             maze[mouse_coords.first][mouse_coords.second] = 0;
             maze[mouse_coords.first][mouse_coords.second + 1] = obj;
             mouse_coords.second++;
@@ -89,7 +89,7 @@ void move_right(int obj){
             cout << "Error, invalid move\n";
         }
     }else if(obj == CAT_ID){
-        if(cat_coords.second < (sizeof(maze[1]) - 1) / sizeof(int) && maze[cat_coords.first][cat_coords.second + 1] == 0 || maze[cat_coords.first][cat_coords.second + 1] == MOUSE_ID){
+        if(cat_coords.second < NUM_COLS && maze[cat_coords.first][cat_coords.second + 1] == 0 || maze[cat_coords.first][cat_coords.second + 1] == MOUSE_ID){
             maze[cat_coords.first][cat_coords.second] = 0;
             maze[cat_coords.first][cat_coords.second + 1] = obj;
             cat_coords.second++;
@@ -124,7 +124,7 @@ void move_up(int obj){
 
 void move_down(int obj){
     if(obj == MOUSE_ID){
-        if(mouse_coords.first < (sizeof(maze[0]) - 1) / sizeof(int) && maze[mouse_coords.first + 1][mouse_coords.second] == 0 || maze[mouse_coords.first + 1][mouse_coords.second] == CHEESE_ID){
+        if(mouse_coords.first < NUM_ROWS && maze[mouse_coords.first + 1][mouse_coords.second] == 0 || maze[mouse_coords.first + 1][mouse_coords.second] == CHEESE_ID){
             maze[mouse_coords.first][mouse_coords.second] = 0;
             maze[mouse_coords.first + 1][mouse_coords.second] = obj;
             mouse_coords.first++;
@@ -133,7 +133,7 @@ void move_down(int obj){
             cout << "Error, invalid move\n";
         }
     }else if(obj == CAT_ID){
-        if(cat_coords.first < (sizeof(maze[0]) - 1) / sizeof(int) && maze[cat_coords.first + 1][cat_coords.second] == 0 || maze[cat_coords.first + 1][cat_coords.second] == MOUSE_ID){
+        if(cat_coords.first < NUM_ROWS && maze[cat_coords.first + 1][cat_coords.second] == 0 || maze[cat_coords.first + 1][cat_coords.second] == MOUSE_ID){
             maze[cat_coords.first][cat_coords.second] = 0;
             maze[cat_coords.first + 1][cat_coords.second] = obj;
             cat_coords.first++;
@@ -406,48 +406,116 @@ void move_mouse(){
 
 void move_cat(){
     // Check left
-    if(cat_coords.second > 0 && (maze[cat_coords.first][cat_coords.second - 1] == 0 || maze[cat_coords.first][cat_coords.second - 1] == MOUSE_ID)){
+    if(cat_coords.second - 1 >= 0 && (maze[cat_coords.first][cat_coords.second - 1] == 0 || maze[cat_coords.first][cat_coords.second - 1] == MOUSE_ID)){
         if(maze[cat_coords.first][cat_coords.second - 1] == MOUSE_ID){
             is_success = true;
             move_left(CAT_ID);
             cout << "The cat has caught the mouse\n";
             return;
+        }else/*if(maze[cat_coords.first][cat_coords.second - 1] == 0)*/{
+            bool isWall = false;
+            int i = 2;
+            while(!isWall){
+                if(cat_coords.second - i > 0){
+                    if(maze[cat_coords.first][cat_coords.second - i] == MOUSE_ID){
+                        move_left(CAT_ID);
+                        cout << "The cat is on the chase\n";
+                        return;
+                    }else if(maze[cat_coords.first][cat_coords.second - i] == 1){
+                        isWall = true;
+                    }
+                }else{
+                    isWall = true;
+                }
+                i++;
+            }
         }
         cat_available_moves[0] = 1;
     }else{
         cat_available_moves[0] = 0;
     }
     // Check right
-    if(cat_coords.second < (sizeof(maze[1]) - 1) / sizeof(int) && (maze[cat_coords.first][cat_coords.second + 1] == 0 || maze[cat_coords.first][cat_coords.second + 1] == MOUSE_ID)){
+    if(cat_coords.second + 1 < NUM_COLS && (maze[cat_coords.first][cat_coords.second + 1] == 0 || maze[cat_coords.first][cat_coords.second + 1] == MOUSE_ID)){
         if(maze[cat_coords.first][cat_coords.second + 1] == MOUSE_ID){
             is_success = true;
             move_right(CAT_ID);
             cout << "The cat has caught the mouse\n";
             return;
+        }else/*if(maze[cat_coords.first][cat_coords.second + 1] == 0)*/{
+            bool isWall = false;
+            int i = 2;
+            while(!isWall){
+                if(cat_coords.second + i < NUM_COLS){
+                    if(maze[cat_coords.first][cat_coords.second + i] == MOUSE_ID){
+                        move_right(CAT_ID);
+                        cout << "The cat is on the chase\n";
+                        return;
+                    }else if(maze[cat_coords.first][cat_coords.second + i] == 1 || cat_coords.second + i < NUM_COLS){
+                        isWall = true;
+                    }
+                }else{
+                    isWall = true;
+                }
+                i++;
+            }
         }
         cat_available_moves[1] = 1;
     }else{
         cat_available_moves[1] = 0;
     }
     // Check up
-    if(cat_coords.first > 0 && (maze[cat_coords.first - 1][cat_coords.second] == 0 || maze[cat_coords.first - 1][cat_coords.second] == MOUSE_ID)){
+    if(cat_coords.first - 1 >= 0 && (maze[cat_coords.first - 1][cat_coords.second] == 0 || maze[cat_coords.first - 1][cat_coords.second] == MOUSE_ID)){
         if(maze[cat_coords.first - 1][cat_coords.second] == MOUSE_ID){
             is_success = true;
             move_up(CAT_ID);
             cout << "The cat has caught the mouse\n";
             return;
+        }else/*if(maze[cat_coords.first - 1][cat_coords.second] == 0)*/{
+            bool isWall = false;
+            int i = 2;
+            while(!isWall){
+                if(cat_coords.first - i > 0){
+                    if(maze[cat_coords.first - i][cat_coords.second] == MOUSE_ID){
+                        move_up(CAT_ID);
+                        cout << "The cat is on the chase\n";
+                        return;
+                    }else if(maze[cat_coords.first - i][cat_coords.second] == 1){
+                        isWall = true;
+                    }
+                }else{
+                    isWall = true;
+                }
+                i++;
+            }
         }
         cat_available_moves[2] = 1;
     }else{
         cat_available_moves[2] = 0;
     }
     // Check down
-    if(cat_coords.first < (sizeof(maze[0]) - 1) / sizeof(int) && (maze[cat_coords.first + 1][cat_coords.second] == 0 || maze[cat_coords.first + 1][cat_coords.second] == MOUSE_ID)){
+    if(cat_coords.first + 1 < NUM_ROWS && (maze[cat_coords.first + 1][cat_coords.second] == 0 || maze[cat_coords.first + 1][cat_coords.second] == MOUSE_ID)){
         if(maze[cat_coords.first + 1][cat_coords.second] == MOUSE_ID){
             is_success = true;
             move_down(CAT_ID);
-            cout << "The cat has caught the mouse at\n";
+            cout << "The cat has caught the mouse\n";
             return;
+        }else/*if(maze[cat_coords.first + 1][cat_coords.second] == 0)*/{
+            bool isWall = false;
+            int i = 2;
+            while(!isWall){
+                if(cat_coords.first + i < NUM_ROWS){
+                    if(maze[cat_coords.first + i][cat_coords.second] == MOUSE_ID){
+                        move_down(CAT_ID);
+                        cout << "The cat is on the chase\n";
+                        return;
+                    }else if(maze[cat_coords.first + i][cat_coords.second] == 1){
+                        isWall = true;
+                    }
+                }else{
+                    isWall = true;
+                }
+                i++;
+            }
         }
         cat_available_moves[3] = 1;
     }else{
@@ -492,6 +560,7 @@ void main(){
     }
 
     move_mouse();
+    cout << "The mouse has moved\n";
     move_cat();
     cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
     total_moves++;
