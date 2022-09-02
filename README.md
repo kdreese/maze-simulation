@@ -9,3 +9,6 @@ A C++ Sample Project in which a cat and a mouse both traverse a maze in order to
 1. Navigate to the folder containing the project in a developer command line
 2. Run `cl /EHsc maze-simulation.cpp` to compile the project
 3. Run `maze-simulation.exe` to view the outcome of the simulation
+
+## References
+The A* code was built with reference to the [example code from geeksforgeeks.org](https://www.geeksforgeeks.org/a-search-algorithm/)
