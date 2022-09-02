@@ -6,35 +6,44 @@ using namespace std;
 
 typedef pair<double, pair<int, int>> pPair;
 
-const pair<int, int> CHEESE_COORDS = make_pair(8, 2);
+const pair<int, int> CHEESE_COORDS = make_pair(18, 14);
 const int MOUSE_ID = 3;
 const int CAT_ID = 4;
 const int CHEESE_ID = 5;
-const int NUM_ROWS = 11;
-const int NUM_COLS = 11;
+const int NUM_ROWS = 19;
+const int NUM_COLS = 19;
 
 /*
 * 1 represents a wall, 0 represents an open space
 * 3 represents the mouse, 4 represents the cat, and 5 represents the cheese
 */
-int maze[NUM_ROWS][NUM_COLS] = {{3, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
-                                {1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1},
-                                {0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0},
-                                {0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0},
-                                {0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0},
-                                {0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0},
-                                {0, 0, 0, 1, 0, 0, 0, 1, 4, 1, 0},
-                                {0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0},
-                                {0, 1, 5, 1, 0, 1, 0, 0, 0, 1, 0},
-                                {0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0},
-                                {0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0}};
+int maze[NUM_ROWS][NUM_COLS] = {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0},
+                                {0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0},
+                                {0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0},
+                                {0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0},
+                                {0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0},
+                                {0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0},
+                                {0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0},
+                                {0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0},
+                                {0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0},
+                                {0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0},
+                                {0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0},
+                                {0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0},
+                                {0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0},
+                                {0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0},
+                                {0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0},
+                                {0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0},
+                                {4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 1, 0, 1, 3}
+                                };
 
 // Top left of maze is (0, 0)
-pair<int, int> mouse_coords = make_pair(0, 0);
-pair<int, int> cat_coords = make_pair(6, 8);
-int mouse_available_moves[4] = {0, 1, 0, 0};
+pair<int, int> mouse_coords = make_pair(18, 18);
+pair<int, int> cat_coords = make_pair(18, 0);
+int mouse_available_moves[4] = {0, 0, 1, 0};
 int mouse_previous_move = 6;
-int cat_available_moves[4] = {0, 0, 0, 1};
+int cat_available_moves[4] = {0, 1, 1, 0};
 int cat_previous_move = 6;
 bool is_success = false;
 int total_moves = 0;
@@ -58,7 +67,7 @@ double calc_h(int row, int col, pair<int, int> dest){
 
 void move_left(int obj){
     if(obj == MOUSE_ID){
-        if(mouse_coords.second > 0 && maze[mouse_coords.first][mouse_coords.second - 1] == 0 || maze[mouse_coords.first][mouse_coords.second - 1] == CHEESE_ID){
+        if(mouse_coords.second > 0 && (maze[mouse_coords.first][mouse_coords.second - 1] == 0 || maze[mouse_coords.first][mouse_coords.second - 1] == CHEESE_ID)){
             maze[mouse_coords.first][mouse_coords.second] = 0;
             maze[mouse_coords.first][mouse_coords.second - 1] = obj;
             mouse_coords.second--;
@@ -67,7 +76,7 @@ void move_left(int obj){
             cout << "Error, invalid move\n";
     }
     }else if(obj == CAT_ID){
-        if(cat_coords.second > 0 && maze[cat_coords.first][cat_coords.second - 1] == 0 || maze[cat_coords.first][cat_coords.second - 1] == MOUSE_ID){
+        if(cat_coords.second > 0 && (maze[cat_coords.first][cat_coords.second - 1] == 0 || maze[cat_coords.first][cat_coords.second - 1] == MOUSE_ID)){
             maze[cat_coords.first][cat_coords.second] = 0;
             maze[cat_coords.first][cat_coords.second - 1] = obj;
             cat_coords.second--;
@@ -80,7 +89,7 @@ void move_left(int obj){
 
 void move_right(int obj){
     if(obj == MOUSE_ID){
-        if(mouse_coords.second < NUM_COLS && maze[mouse_coords.first][mouse_coords.second + 1] == 0 || maze[mouse_coords.first][mouse_coords.second + 1] == CHEESE_ID){
+        if(mouse_coords.second < NUM_COLS && (maze[mouse_coords.first][mouse_coords.second + 1] == 0 || maze[mouse_coords.first][mouse_coords.second + 1] == CHEESE_ID)){
             maze[mouse_coords.first][mouse_coords.second] = 0;
             maze[mouse_coords.first][mouse_coords.second + 1] = obj;
             mouse_coords.second++;
@@ -89,7 +98,7 @@ void move_right(int obj){
             cout << "Error, invalid move\n";
         }
     }else if(obj == CAT_ID){
-        if(cat_coords.second < NUM_COLS && maze[cat_coords.first][cat_coords.second + 1] == 0 || maze[cat_coords.first][cat_coords.second + 1] == MOUSE_ID){
+        if(cat_coords.second < NUM_COLS && (maze[cat_coords.first][cat_coords.second + 1] == 0 || maze[cat_coords.first][cat_coords.second + 1] == MOUSE_ID)){
             maze[cat_coords.first][cat_coords.second] = 0;
             maze[cat_coords.first][cat_coords.second + 1] = obj;
             cat_coords.second++;
@@ -102,7 +111,7 @@ void move_right(int obj){
 
 void move_up(int obj){
     if(obj == MOUSE_ID){
-        if(mouse_coords.first > 0 && maze[mouse_coords.first - 1][mouse_coords.second] == 0 || maze[mouse_coords.first - 1][mouse_coords.second] == CHEESE_ID){
+        if(mouse_coords.first > 0 && (maze[mouse_coords.first - 1][mouse_coords.second] == 0 || maze[mouse_coords.first - 1][mouse_coords.second] == CHEESE_ID)){
             maze[mouse_coords.first][mouse_coords.second] = 0;
             maze[mouse_coords.first - 1][mouse_coords.second] = obj;
             mouse_coords.first--;
@@ -111,7 +120,7 @@ void move_up(int obj){
             cout << "Error, invalid move\n";
         }
     }else if(obj == CAT_ID){
-        if(cat_coords.first > 0 && maze[cat_coords.first - 1][cat_coords.second] == 0 || maze[cat_coords.first - 1][cat_coords.second] == MOUSE_ID){
+        if(cat_coords.first > 0 && (maze[cat_coords.first - 1][cat_coords.second] == 0 || maze[cat_coords.first - 1][cat_coords.second] == MOUSE_ID)){
             maze[cat_coords.first][cat_coords.second] = 0;
             maze[cat_coords.first - 1][cat_coords.second] = obj;
             cat_coords.first--;
@@ -124,7 +133,7 @@ void move_up(int obj){
 
 void move_down(int obj){
     if(obj == MOUSE_ID){
-        if(mouse_coords.first < NUM_ROWS && maze[mouse_coords.first + 1][mouse_coords.second] == 0 || maze[mouse_coords.first + 1][mouse_coords.second] == CHEESE_ID){
+        if(mouse_coords.first < NUM_ROWS && (maze[mouse_coords.first + 1][mouse_coords.second] == 0 || maze[mouse_coords.first + 1][mouse_coords.second] == CHEESE_ID)){
             maze[mouse_coords.first][mouse_coords.second] = 0;
             maze[mouse_coords.first + 1][mouse_coords.second] = obj;
             mouse_coords.first++;
@@ -133,7 +142,7 @@ void move_down(int obj){
             cout << "Error, invalid move\n";
         }
     }else if(obj == CAT_ID){
-        if(cat_coords.first < NUM_ROWS && maze[cat_coords.first + 1][cat_coords.second] == 0 || maze[cat_coords.first + 1][cat_coords.second] == MOUSE_ID){
+        if(cat_coords.first < NUM_ROWS && (maze[cat_coords.first + 1][cat_coords.second] == 0 || maze[cat_coords.first + 1][cat_coords.second] == MOUSE_ID)){
             maze[cat_coords.first][cat_coords.second] = 0;
             maze[cat_coords.first + 1][cat_coords.second] = obj;
             cat_coords.first++;
@@ -526,24 +535,19 @@ void move_cat(){
 
     if(chosen_dir == 0){
         move_left(CAT_ID);
-        cout << "The cat is moving left\n";
     }else if(chosen_dir == 1){
         move_right(CAT_ID);
-        cout << "The cat is moving right\n";
     }else if(chosen_dir == 2){
         move_up(CAT_ID);
-        cout << "The cat is moving up\n";
     }else if(chosen_dir == 3){
         move_down(CAT_ID);
-        cout << "The cat is moving down\n";
     }
 }
 
-void main(){
+int main(){
     while(!is_success){
-    //for(int k = 0; k < 1; k++){
-        for(int i = 0; i < 11; i++){
-            for(int j = 0; j < 11; j++){
+        for(int i = 0; i < NUM_ROWS; i++){
+            for(int j = 0; j < NUM_COLS; j++){
                 if(maze[i][j] == 1){
                     cout << "|";
                 }else if(maze[i][j] == 3){
@@ -551,7 +555,7 @@ void main(){
                 }else if(maze[i][j] == 4){
                     cout << "C";
                 }else if(maze[i][j] == 5){
-                    cout << "c";
+                    cout << "<";
                 }else{
                     cout << " ";
                 }
@@ -560,10 +564,10 @@ void main(){
     }
 
     move_mouse();
-    cout << "The mouse has moved\n";
     move_cat();
     cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
     total_moves++;
     }
     cout << "Total moves: " << total_moves;
+    return 0;
 }
