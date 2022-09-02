@@ -2,6 +2,8 @@
 // A cat and a mouse traverse a maze in order to capture their lunch
 
 #include <iostream>
+#include <cstring>
+#include <cfloat>
 #include <set>
 #include <stack>
 
