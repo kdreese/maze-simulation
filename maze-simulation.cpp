@@ -1,3 +1,6 @@
+// A C++ Sample Project by Kyle Reese
+// A cat and a mouse traverse a maze in order to capture their lunch
+
 #include <iostream>
 #include <set>
 #include <stack>
@@ -42,7 +45,6 @@ int maze[NUM_ROWS][NUM_COLS] = {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 pair<int, int> mouse_coords = make_pair(18, 18);
 pair<int, int> cat_coords = make_pair(18, 0);
 int mouse_available_moves[4] = {0, 0, 1, 0};
-int mouse_previous_move = 6;
 int cat_available_moves[4] = {0, 1, 1, 0};
 int cat_previous_move = 6;
 bool is_success = false;
@@ -71,7 +73,6 @@ void move_left(int obj){
             maze[mouse_coords.first][mouse_coords.second] = 0;
             maze[mouse_coords.first][mouse_coords.second - 1] = obj;
             mouse_coords.second--;
-            mouse_previous_move = 0;
         }else{
             cout << "Error, invalid move\n";
     }
@@ -93,7 +94,6 @@ void move_right(int obj){
             maze[mouse_coords.first][mouse_coords.second] = 0;
             maze[mouse_coords.first][mouse_coords.second + 1] = obj;
             mouse_coords.second++;
-            mouse_previous_move = 1;
         }else{
             cout << "Error, invalid move\n";
         }
@@ -115,7 +115,6 @@ void move_up(int obj){
             maze[mouse_coords.first][mouse_coords.second] = 0;
             maze[mouse_coords.first - 1][mouse_coords.second] = obj;
             mouse_coords.first--;
-            mouse_previous_move = 2;
         }else{
             cout << "Error, invalid move\n";
         }
@@ -137,7 +136,6 @@ void move_down(int obj){
             maze[mouse_coords.first][mouse_coords.second] = 0;
             maze[mouse_coords.first + 1][mouse_coords.second] = obj;
             mouse_coords.first++;
-            mouse_previous_move = 3;
         }else{
             cout << "Error, invalid move\n";
         }
@@ -240,7 +238,6 @@ void aStar(pair<int, int> start, pair<int, int> dest){
             if(i == dest.first && j - 1 == dest.second){
                 cellDetails[i][j - 1].parent_x = i;
                 cellDetails[i][j - 1].parent_y = j;
-                cout << "The destination has been found!\n";
                 takeFirstMove(cellDetails, dest);
                 dest_achieved = true;
                 return;
@@ -265,7 +262,6 @@ void aStar(pair<int, int> start, pair<int, int> dest){
             if(i == dest.first && j + 1 == dest.second){
                 cellDetails[i][j + 1].parent_x = i;
                 cellDetails[i][j + 1].parent_y = j;
-                cout << "The destination has been found!\n";
                 takeFirstMove(cellDetails, dest);
                 dest_achieved = true;
                 return;
@@ -289,7 +285,6 @@ void aStar(pair<int, int> start, pair<int, int> dest){
             if(i - 1 == dest.first && j == dest.second){
                 cellDetails[i - 1][j].parent_x = i;
                 cellDetails[i - 1][j].parent_y = j;
-                cout << "The destination has been found!\n";
                 takeFirstMove(cellDetails, dest);
                 dest_achieved = true;
                 return;
@@ -313,7 +308,6 @@ void aStar(pair<int, int> start, pair<int, int> dest){
             if(i + 1 == dest.first && j == dest.second){
                 cellDetails[i + 1][j].parent_x = i;
                 cellDetails[i + 1][j].parent_y = j;
-                cout << "The destination has been found!\n";
                 takeFirstMove(cellDetails, dest);
                 dest_achieved = true;
                 return;
@@ -340,67 +334,39 @@ void aStar(pair<int, int> start, pair<int, int> dest){
     return;
 }
 
-int rand_dir(int arr[4], int obj){
+int rand_dir(int arr[4]){
     int move_total = 0;
-    for(int i = 0; i < sizeof(arr); i++){
+    for(int i = 0; i < 4; i++){
         move_total += arr[i];
     }
-    if(obj == MOUSE_ID){
-        if(move_total > 1){
-            if(mouse_previous_move == 0){
-                if(arr[1] == 1){
-                    arr[1] = 0;
-                    move_total--;
-                }
-            }else if(mouse_previous_move == 1){
-                if(arr[0] == 1){
-                    arr[0] = 0;
-                    move_total--;
-                }
-            }else if(mouse_previous_move == 2){
-                if(arr[3] == 1){
-                    arr[3] = 0;
-                    move_total--;
-                }
-            }else if(mouse_previous_move == 3){
-                if(arr[2] == 1){
-                    arr[2] = 0;
-                    move_total--;
-                }
+    if(move_total > 1){
+        if(cat_previous_move == 0){
+            if(arr[1] == 1){
+                arr[1] = 0;
+                move_total--;
             }
-        }else if(move_total == 0){
-            return 6;
-        }
-    }else if(obj == CAT_ID){
-        if(move_total > 1){
-            if(cat_previous_move == 0){
-                if(arr[1] == 1){
-                    arr[1] = 0;
-                    move_total--;
-                }
-            }else if(cat_previous_move == 1){
-                if(arr[0] == 1){
-                    arr[0] = 0;
-                    move_total--;
-                }
-            }else if(cat_previous_move == 2){
-                if(arr[3] == 1){
-                    arr[3] = 0;
-                    move_total--;
-                }
-            }else if(cat_previous_move == 3){
-                if(arr[2] == 1){
-                    arr[2] = 0;
-                    move_total--;
-                }
+        }else if(cat_previous_move == 1){
+            if(arr[0] == 1){
+                arr[0] = 0;
+                move_total--;
             }
-        }else if(move_total == 0){
-            return 6;
+        }else if(cat_previous_move == 2){
+            if(arr[3] == 1){
+                arr[3] = 0;
+                move_total--;
+            }
+        }else if(cat_previous_move == 3){
+            if(arr[2] == 1){
+                arr[2] = 0;
+                move_total--;
+            }
         }
+    }else if(move_total == 0){
+        return 6;
     }
     srand(time(NULL));
     int random_dir = rand() % move_total + 1;
-    for(int i = 0; i < sizeof(arr); i++){
+    for(int i = 0; i < 4; i++){
         random_dir -= arr[i];
         if(random_dir == 0){
             return i;
@@ -531,7 +497,7 @@ void move_cat(){
         cat_available_moves[3] = 0;
     }
 
-    int chosen_dir = rand_dir(cat_available_moves, CAT_ID);
+    int chosen_dir = rand_dir(cat_available_moves);
 
     if(chosen_dir == 0){
         move_left(CAT_ID);
