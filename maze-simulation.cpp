@@ -56,32 +56,6 @@ double calc_h(int row, int col, pair<int, int> dest){
     return abs(row - dest.first) + abs(col - dest.second);
 }
 
-void tracePath(cell cellDetails[][NUM_COLS], pair<int, int> dest)
-{
-    printf("\nThe Path is ");
-    int row = dest.first;
-    int col = dest.second;
-
-    stack<pair<int, int>> Path;
-
-    while (!(cellDetails[row][col].parent_x == row && cellDetails[row][col].parent_y == col)) {
-        Path.push(make_pair(row, col));
-        int temp_row = cellDetails[row][col].parent_x;
-        int temp_col = cellDetails[row][col].parent_y;
-        row = temp_row;
-        col = temp_col;
-    }
-
-    Path.push(make_pair(row, col));
-    while (!Path.empty()) {
-        pair<int, int> p = Path.top();
-        Path.pop();
-        printf("-> (%d,%d) ", p.first, p.second);
-    }
-
-    return;
-}
-
 void move_left(int obj){
     if(obj == MOUSE_ID){
         if(mouse_coords.second > 0 && maze[mouse_coords.first][mouse_coords.second - 1] == 0 || maze[mouse_coords.first][mouse_coords.second - 1] == CHEESE_ID){
@@ -170,6 +144,41 @@ void move_down(int obj){
     }
 }
 
+void takeFirstMove(cell cellDetails[][NUM_COLS], pair<int, int> dest){
+    int row = dest.first;
+    int col = dest.second;
+
+    stack<pair<int, int>> Path;
+
+    while (!(cellDetails[row][col].parent_x == row && cellDetails[row][col].parent_y == col)) {
+        Path.push(make_pair(row, col));
+        int temp_row = cellDetails[row][col].parent_x;
+        int temp_col = cellDetails[row][col].parent_y;
+        row = temp_row;
+        col = temp_col;
+    }
+
+    pair<int, int> p = Path.top();
+    if(p.first == row && p.second < col){
+        move_left(MOUSE_ID);
+    }else if(p.first == row && p.second > col){
+        move_right(MOUSE_ID);
+    }else if(p.first < row && p.second == col){
+        move_up(MOUSE_ID);
+    }else if(p.first > row && p.second == col){
+        move_down(MOUSE_ID);
+    }else{
+        cout << "Error, path not found\n";
+    }
+
+    if(p.first == dest.first && p.second == dest.second){
+        cout << "The mouse has reached the cheese\n";
+        is_success = true;
+    }
+
+    return;
+}
+
 void aStar(pair<int, int> start, pair<int, int> dest){
     if(start.first == dest.first && start.second == dest.second){
         cout << "The destination has already been reached\n";
@@ -223,7 +232,7 @@ void aStar(pair<int, int> start, pair<int, int> dest){
                 cellDetails[i][j - 1].parent_x = i;
                 cellDetails[i][j - 1].parent_y = j;
                 cout << "The destination has been found!\n";
-                tracePath(cellDetails, dest);
+                takeFirstMove(cellDetails, dest);
                 dest_achieved = true;
                 return;
             }else if(closedList[i][j - 1] == false && isTraversable(i, j - 1)){
@@ -248,7 +257,7 @@ void aStar(pair<int, int> start, pair<int, int> dest){
                 cellDetails[i][j + 1].parent_x = i;
                 cellDetails[i][j + 1].parent_y = j;
                 cout << "The destination has been found!\n";
-                tracePath(cellDetails, dest);
+                takeFirstMove(cellDetails, dest);
                 dest_achieved = true;
                 return;
             }else if(closedList[i][j + 1] == false && isTraversable(i, j + 1)){
@@ -272,7 +281,7 @@ void aStar(pair<int, int> start, pair<int, int> dest){
                 cellDetails[i - 1][j].parent_x = i;
                 cellDetails[i - 1][j].parent_y = j;
                 cout << "The destination has been found!\n";
-                tracePath(cellDetails, dest);
+                takeFirstMove(cellDetails, dest);
                 dest_achieved = true;
                 return;
             }else if(closedList[i - 1][j] == false && isTraversable(i - 1, j)){
@@ -296,7 +305,7 @@ void aStar(pair<int, int> start, pair<int, int> dest){
                 cellDetails[i + 1][j].parent_x = i;
                 cellDetails[i + 1][j].parent_y = j;
                 cout << "The destination has been found!\n";
-                tracePath(cellDetails, dest);
+                takeFirstMove(cellDetails, dest);
                 dest_achieved = true;
                 return;
             }else if(closedList[i + 1][j] == false && isTraversable(i + 1, j)){
@@ -393,74 +402,6 @@ int rand_dir(int arr[4], int obj){
 
 void move_mouse(){
     aStar(mouse_coords, CHEESE_COORDS);
-    /*
-    // Check left
-    if(mouse_coords.second > 0 && (maze[mouse_coords.first][mouse_coords.second - 1] == 0 || maze[mouse_coords.first][mouse_coords.second - 1] == CHEESE_ID)){
-        if(maze[mouse_coords.first][mouse_coords.second - 1] == CHEESE_ID){
-            is_success = true;
-            move_left(MOUSE_ID);
-            cout << "The mouse has reached the cheese\n";
-            return;
-        }
-        mouse_available_moves[0] = 1;
-    }else{
-        mouse_available_moves[0] = 0;
-    }
-    // Check right
-    if(mouse_coords.second < (sizeof(maze[1]) - 1) / sizeof(int) && (maze[mouse_coords.first][mouse_coords.second + 1] == 0 || maze[mouse_coords.first][mouse_coords.second + 1] == CHEESE_ID)){
-        if(maze[mouse_coords.first][mouse_coords.second + 1] == CHEESE_ID){
-            is_success = true;
-            move_right(MOUSE_ID);
-            cout << "The mouse has reached the cheese\n";
-            return;
-        }
-        mouse_available_moves[1] = 1;
-    }else{
-        mouse_available_moves[1] = 0;
-    }
-    // Check up
-    if(mouse_coords.first > 0 && (maze[mouse_coords.first - 1][mouse_coords.second] == 0 || maze[mouse_coords.first - 1][mouse_coords.second] == CHEESE_ID)){
-        if(maze[mouse_coords.first - 1][mouse_coords.second] == CHEESE_ID){
-            is_success = true;
-            move_up(MOUSE_ID);
-            cout << "The mouse has reached the cheese\n";
-            return;
-        }
-        mouse_available_moves[2] = 1;
-    }else{
-        mouse_available_moves[2] = 0;
-    }
-    // Check down
-    if(mouse_coords.first < (sizeof(maze[0]) - 1) / sizeof(int) && (maze[mouse_coords.first + 1][mouse_coords.second] == 0 || maze[mouse_coords.first + 1][mouse_coords.second] == CHEESE_ID)){
-        if(maze[mouse_coords.first + 1][mouse_coords.second] == CHEESE_ID){
-            is_success = true;
-            move_down(MOUSE_ID);
-            cout << "The mouse has reached the cheese\n";
-            return;
-        }
-        mouse_available_moves[3] = 1;
-    }else{
-        mouse_available_moves[3] = 0;
-    }
-
-    int chosen_dir = rand_dir(mouse_available_moves, MOUSE_ID);
-
-    if(chosen_dir == 0){
-        move_left(MOUSE_ID);
-        cout << "The mouse is moving left\n";
-    }else if(chosen_dir == 1){
-        move_right(MOUSE_ID);
-        cout << "The mouse is moving right\n";
-    }else if(chosen_dir == 2){
-        move_up(MOUSE_ID);
-        cout << "The mouse is moving up\n";
-    }else if(chosen_dir == 3){
-        move_down(MOUSE_ID);
-        cout << "The mouse is moving down\n";
-    }else{
-        cout << "No valid moves\n";
-    }
-    */
 }
 
 void move_cat(){
@@ -531,8 +472,8 @@ void move_cat(){
 }
 
 void main(){
-    //while(!is_success){
-    for(int k = 0; k < 1; k++){
+    while(!is_success){
+    //for(int k = 0; k < 1; k++){
         for(int i = 0; i < 11; i++){
             for(int j = 0; j < 11; j++){
                 if(maze[i][j] == 1){
@@ -551,7 +492,7 @@ void main(){
     }
 
     move_mouse();
-    //move_cat();
+    move_cat();
     cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
     total_moves++;
     }
