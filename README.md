@@ -7,4 +7,5 @@ A C++ Sample Project in which a cat and a mouse both traverse a maze in order to
 
 ## How to Run
 1. Navigate to the folder containing the project in a command line
-2. 
+2. Run `cl /EHsc maze-simulation.cpp` to compile the project
+3. Run `maze-simulation.exe` to view the outcome of the simulation 
